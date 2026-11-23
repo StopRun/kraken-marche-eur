@@ -3,7 +3,8 @@ name: Relais des cours Kraken
 on:
   schedule:
     # Toutes les 10 minutes, décalé des heures pleines où GitHub retarde le plus les tâches planifiées.
-    - cron: '3-59/10 * * * *'
+    # Minutes écrites une à une : la forme « 3-59/10 » n'a déclenché aucun passage le 23/11/2026.
+    - cron: '3,13,23,33,43,53 * * * *'
   workflow_dispatch:
 
 permissions:
