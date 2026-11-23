@@ -1,0 +1,50 @@
+name: Relais des cours Kraken
+
+on:
+  schedule:
+    # Toutes les 10 minutes, décalé des heures pleines où GitHub retarde le plus les tâches planifiées.
+    - cron: '3-59/10 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# Un passage lent (relecture horaire des bougies journalières) ne doit pas se chevaucher avec le suivant.
+concurrency:
+  group: relais
+  cancel-in-progress: false
+
+jobs:
+  relais:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Essais
+        run: python3 -m unittest discover -s tests
+
+      - name: Cours précédents
+        run: |
+          if git fetch --depth=1 origin donnees 2>/dev/null; then
+            git show FETCH_HEAD:marche-kraken.json > precedent.json
+          else
+            echo '{}' > precedent.json
+          fi
+
+      - name: Relais
+        run: python3 relais.py --precedent precedent.json --sortie marche-kraken.json
+
+      # Un seul commit, remplacé à chaque passage : la branche ne grossit pas.
+      - name: Publication sur la branche donnees
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir publication
+          cp marche-kraken.json publication/
+          cd publication
+          git init -q -b donnees
+          git add marche-kraken.json
+          git -c user.name="relais-kraken" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -q -m "Cours du $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push -q --force "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" donnees

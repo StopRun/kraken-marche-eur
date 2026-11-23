@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+precedent.json
+marche-kraken.json
+publication/
