@@ -109,9 +109,9 @@ class RelayTest(unittest.TestCase):
                           "v24": "100", "vol_eur": 5600000})
         # Croisée : volume valorisé par le cours euro de la cotation (50 000 × 0,0012 × 56 000 €).
         self.assertEqual(p["ticker"]["data"]["ALPHAXBT"]["vol_eur"], 3360000)
-        # BETA : 1 500 000 × 0,10 € = 150 000 € sur 24 h, sous le seuil horaire de 1 M€ : bougies journalières seulement.
-        self.assertEqual(list(p["h1"]["data"]), ["XBTEUR", "ETHEUR", "ALPHAEUR"])
-        self.assertEqual(len(p["h1"]["data"]["XBTEUR"]), 48)
+        # BETA : 1 500 000 × 0,10 € = 150 000 € sur 24 h, au-dessus du seuil horaire ; TINY (10 €) en dessous.
+        self.assertEqual(list(p["h1"]["data"]), ["XBTEUR", "ETHEUR", "ALPHAEUR", "BETAEUR"])
+        self.assertEqual(len(p["h1"]["data"]["XBTEUR"]), relais.H1_KEEP)
         self.assertEqual(p["h1"]["data"]["XBTEUR"][0][5], "3", "volume = colonne 7 de Kraken")
         self.assertEqual(sorted(p["d1"]["data"]), ["ALPHAEUR", "ALPHAXBT", "BETAEUR", "ETHEUR", "XBTEUR"])
         self.assertEqual(len(p["d1"]["data"]["BETAEUR"]), 15)
@@ -134,7 +134,8 @@ class RelayTest(unittest.TestCase):
         fake.now += 600
         fake.calls.clear()
         second = run(fake, first)
-        self.assertEqual(methods(fake), ["Ticker", "OHLC:XBTEUR:60", "OHLC:ETHEUR:60", "OHLC:ALPHAEUR:60"])
+        self.assertEqual(methods(fake), ["Ticker", "OHLC:XBTEUR:60", "OHLC:ETHEUR:60", "OHLC:ALPHAEUR:60",
+                                         "OHLC:BETAEUR:60"])
         self.assertEqual(second["d1"], first["d1"])
         self.assertEqual(second["paires"], first["paires"])
         self.assertNotEqual(second["ticker"]["t"], first["ticker"]["t"])

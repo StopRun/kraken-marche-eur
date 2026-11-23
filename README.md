@@ -10,8 +10,8 @@ Ce fichier alimente une veille automatique qui ne peut pas joindre `api.kraken.c
 
 ## Contenu
 - `ticker` : toutes les paires contre euro (hors monnaies et stablecoins) et les paires cotées en BTC ou en ETH ; dernier cours, meilleurs prix, plus haut et plus bas sur 24 h, ouverture du jour, volume en unités et en euros.
-- `h1` : 48 bougies horaires de BTC/EUR, ETH/EUR et des paires contre euro d'au moins 1 M€ échangés sur 24 h.
-- `d1` : 15 bougies journalières des paires contre euro d'au moins 100 000 € et des paires croisées d'au moins 50 000 €, relues toutes les heures.
+- `h1` : 30 bougies horaires de BTC/EUR, ETH/EUR et des paires contre euro d'au moins 50 000 € échangés sur 24 h.
+- `d1` : 15 bougies journalières des paires contre euro d'au moins 50 000 € et des paires croisées d'au moins 25 000 €, relues toutes les heures.
 - `fng` : indice peur et avidité (alternative.me), relu toutes les heures.
 - `univers` : paires contre euro d'au moins 250 000 € sur 24 h triées par volume, et nouvelles cotations des 30 derniers jours.
 - `erreurs` : incidents du dernier passage. Chaque bloc porte l'heure `t` de sa dernière lecture réussie ; un bloc en échec garde sa valeur précédente.

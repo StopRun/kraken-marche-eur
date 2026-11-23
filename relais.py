@@ -28,12 +28,15 @@ FIAT_OR_STABLE = {
 # Le régime D et le déclencheur T2 se lisent sur les bougies horaires de BTC et d'ETH :
 # toujours relayées, quel que soit leur volume du jour.
 INTRADAY_ALWAYS = ("XBTEUR", "ETHEUR")
-H1_MIN_VOLUME_EUR = 1_000_000
-D1_MIN_VOLUME_EUR = 100_000
-CROSS_MIN_VOLUME_EUR = 50_000
+# Seuils bas : le marché euro de Kraken est mince (moins de 30 paires au-dessus de 250 000 € par jour le 23/11/2026),
+# et un actif tenu en lots de 300 à 500 € doit garder ses bougies même un jour calme.
+H1_MIN_VOLUME_EUR = 50_000
+D1_MIN_VOLUME_EUR = 50_000
+CROSS_MIN_VOLUME_EUR = 25_000
 # Assez liquide pour un lot de 300 à 500 € : base de la découverte de candidats.
 UNIVERSE_MIN_VOLUME_EUR = 250_000
-H1_KEEP = 48
+# 30 h : de quoi lire 1 h, 4 h et 24 h glissantes.
+H1_KEEP = 30
 D1_KEEP = 15
 # Un peu moins d'une heure, pour qu'un passage sur six (toutes les 10 min) relise les blocs lents.
 SLOW_REFRESH_S = 55 * 60
